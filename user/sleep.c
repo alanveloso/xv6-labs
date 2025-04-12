@@ -1,4 +1,4 @@
-// Sleeping locks implementation with sleep() function
+
 
 #include "types.h"
 #include "riscv.h"
@@ -9,7 +9,6 @@
 #include "proc.h"
 #include "sleeplock.h"
 
-// Initialize a sleeplock
 void
 initsleeplock(struct sleeplock *lk, char *name)
 {
@@ -19,31 +18,28 @@ initsleeplock(struct sleeplock *lk, char *name)
   lk->pid = 0;
 }
 
-// Acquire a sleeplock
 void
 acquiresleep(struct sleeplock *lk)
 {
   acquire(&lk->lk);
   while (lk->locked) {
-    sleep(lk, &lk->lk); // Sleep until the lock is released
+    sleep(lk, &lk->lk); 
   }
   lk->locked = 1;
   lk->pid = myproc()->pid;
   release(&lk->lk);
 }
 
-// Release a sleeplock
 void
 releasesleep(struct sleeplock *lk)
 {
   acquire(&lk->lk);
   lk->locked = 0;
   lk->pid = 0;
-  wakeup(lk); // Wake up any process sleeping on this lock
+  wakeup(lk); 
   release(&lk->lk);
 }
 
-// Check if the current process holds the sleeplock
 int
 holdingsleep(struct sleeplock *lk)
 {
@@ -54,24 +50,22 @@ holdingsleep(struct sleeplock *lk)
   return r;
 }
 
-// Put current process to sleep on chan, releasing lk temporarily
+
 void
 sleep(void *chan, struct spinlock *lk)
 {
   struct proc *p = myproc();
 
-  acquire(&p->lock);      // Lock process state
-  release(lk);            // Release the resource lock
+  acquire(&p->lock);      
+  release(lk);            
 
-  // Mark the process as sleeping on the channel
   p->chan = chan;
   p->state = SLEEPING;
 
-  sched();                // Yield CPU
+  sched();               
 
-  // Process has been woken up
   p->chan = 0;
 
-  release(&p->lock);      // Done modifying process state
-  acquire(lk);            // Reacquire original resource lock
+  release(&p->lock);      
+  acquire(lk);           
 }
