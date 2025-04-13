@@ -1,0 +1,30 @@
+#include "kernel/types.h"
+#include "kernel/stat.h"
+#include "user/user.h"
+
+int main(int num, char *num_2S[]){
+    int pai[2], filho[2];
+    
+    if(pipe(pai) < 0 || pipe(filho) < 0){
+        exit(1);
+    } 
+
+    int pid = fork();
+    if (pid < 0)
+    {
+        exit(1);
+    }
+
+    if(pid == 0){
+        read(pai[0],buf,4);
+        printf("%d: received %s\n", getpid(), buf);
+        write(filho[1], "pong", 4);
+    
+    }else{
+        write(pai[1],"ping",4);
+        read(filho[0], buf, 4);
+        printf("%d: received %s\n", getpid(), buf);
+    }
+    
+    exit(0);
+}
