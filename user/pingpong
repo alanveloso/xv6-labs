@@ -4,6 +4,7 @@
 
 int main(int num, char *num_2S[]){
     int pai[2], filho[2];
+    char buf[5];
     
     if(pipe(pai) < 0 || pipe(filho) < 0){
         exit(1);
