@@ -1,0 +1,14 @@
+public class ExemploSleepNano {
+    public static void main(String[] args) {
+        System.out.println("Início da execução.");
+
+        try {
+            Thread.sleep(1000, 500_000); // Pausa de aproximadamente 1000,5 milissegundos
+        } catch (InterruptedException e) {
+            System.out.println("A thread foi interrompida durante o sono.");
+            Thread.currentThread().interrupt();
+        }
+
+        System.out.println("Fim da execução.");
+    }
+}
